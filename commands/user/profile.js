@@ -38,8 +38,6 @@ module.exports = class profileCommand extends Command {
 	}
 
 	async run(message) {
-		//this is where the actual code for the command goes
-		await message.delete()
 
 		EXP.findOne({
 			userID: message.author.id,

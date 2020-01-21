@@ -36,8 +36,6 @@ module.exports = class expCommand extends Command {
 	}
 
 	async run(message) {
-		//this is where the actual code for the command goes
-		await message.delete()
 
 		const embed = new Discord.RichEmbed()
 			.setTitle(message.author.username + "'s experience")
