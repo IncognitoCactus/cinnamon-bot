@@ -3,7 +3,6 @@ const sqlite = require('sqlite');
 const Commando = require('discord.js-commando');
 const path = require('path');
 const { formatNumber } = require('./utils/miscUtils.js');
-const secure = require('./secure.json');
 // eslint-disable-next-line no-global-assign
 console = new (require('./utils/advancedConsole'))(0, console.log);
 //Version number for playing status
@@ -22,7 +21,7 @@ const statuses = [Cinnamon.commandPrefix + `help`, `We're gonna be good friends 
 //screw sql, mongo is the future
 //TODO - REMOVE THE FUCKING PASSWORD
 
-let dbToken =""
+let dbToken = ""
 if (process.env.database) {
 	dbToken = process.env.database;
 }
@@ -140,5 +139,6 @@ Cinnamon.on("message", async message => {
 if (process.env.BOT_TOKEN) Cinnamon.login(process.env.BOT_TOKEN);
 // Otherwise, assumes local testing configuration and loads token from secure
 else {
+	const secure = require('./secure.json');
 	Cinnamon.login(secure.discordAPIKey);
 }
