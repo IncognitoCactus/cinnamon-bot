@@ -34,24 +34,32 @@ module.exports = class profileCommand extends Command {
 				usages: 2,
 				duration: 10
 			},
+			args: [
+				{
+					key: 'user',
+					prompt: 'Which user would you like to get the profile of?',
+					type: 'user',
+					default: msg => msg.author
+				}
+			]
 		});
 	}
 
-	async run(message) {
+	async run(msg, { user }) {
 
 		EXP.findOne({
-			userID: message.author.id,
-			serverID: message.guild.id
+			userID: user.id,
+			serverID: msg.guild.id
 		}, (err, res) => {
 			if (err) console.log(err);
             
 			const embed = new Discord.RichEmbed()
-				.setTitle(message.author.username + "'s User Profile")
+				.setTitle(user.username + "'s User Profile")
 				.setDescription("Tracks your activity in this server.")
-				.setThumbnail(message.author.displayAvatarURL);
+				.setThumbnail(user.displayAvatarURL);
                 
 			if (!res) {
-				embed.addField('You have no exp in this server :(')
+				embed.addField('You have no exp in this server :(','Talk some more!!')
 			}
 			else {
 				embed.addField('EXP to Next Level',res.exp + " exp.")
@@ -59,7 +67,7 @@ module.exports = class profileCommand extends Command {
             
 			//Level
 			LVL.findOne({
-				userID: message.author.id
+				userID: user.id
 			}, (err, res) => {
 				if (err) console.log(err);
                     
@@ -70,7 +78,7 @@ module.exports = class profileCommand extends Command {
 					embed.addField('Global Level',res.lvl)
 				}
 
-				message.channel.send(embed)
+				msg.channel.send(embed)
 			})
 
 

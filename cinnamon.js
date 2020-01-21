@@ -19,7 +19,6 @@ const Cinnamon = new Commando.Client({
 const statuses = [Cinnamon.commandPrefix + `help`, `We're gonna be good friends :)`, `:D`, `Try ` + Cinnamon.commandPrefix + `ship`, `Hi, you're cool`]
 
 //screw sql, mongo is the future
-//TODO - REMOVE THE FUCKING PASSWORD
 
 let dbToken = ""
 if (process.env.database) {
@@ -85,6 +84,9 @@ Cinnamon.on("guildCreate", guild => {
 
 
 Cinnamon.on("message", async message => {
+	//Bots don't earn exp
+	if (message.author.bot) return;
+
 	const chance = Math.floor(Math.random() * 70) + 1;
 	if (chance > 50) {
 	//here is where the exp are added.
@@ -117,7 +119,6 @@ Cinnamon.on("message", async message => {
 							const newDoc = new LVL({
 								userID: message.author.id,
 								username: message.author.username,
-								serverID: message.guild.id,
 								lvl: 1
 							})
 							newDoc.save().catch(err => console.log(err));

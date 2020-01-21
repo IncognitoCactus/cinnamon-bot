@@ -32,19 +32,27 @@ module.exports = class expCommand extends Command {
 				usages: 2,
 				duration: 10
 			},
+			args: [
+				{
+					key: 'user',
+					prompt: 'Which user would you like to get the exp of?',
+					type: 'user',
+					default: msg => msg.author
+				}
+			]
 		});
 	}
 
-	async run(message) {
+	async run(msg, { user }) {
 
 		const embed = new Discord.RichEmbed()
-			.setTitle(message.author.username + "'s experience")
+			.setTitle(user.username + "'s experience")
 			.setDescription("Experience is gained through activity! EXP is per-server, but your level is global!")
-			.setThumbnail(message.author.displayAvatarURL);
+			.setThumbnail(user.displayAvatarURL);
 
 		EXP.findOne({
-			userID: message.author.id,
-			serverID: message.guild.id
+			userID: user.id,
+			serverID: msg.guild.id
 		}, (err, res) => {
 			if (err) console.log(err);
         
@@ -56,7 +64,7 @@ module.exports = class expCommand extends Command {
 				embed.addField(res.username, res.exp + " exp.");
 			}
         
-			message.channel.send(embed)
+			msg.channel.send(embed)
         
 		})
 	}
