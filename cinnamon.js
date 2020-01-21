@@ -21,12 +21,19 @@ const statuses = [Cinnamon.commandPrefix + `help`, `We're gonna be good friends 
 
 //screw sql, mongo is the future
 //TODO - REMOVE THE FUCKING PASSWORD
-if(secure.database) {
-	const mongoose = require("mongoose");
-	mongoose.connect(String(secure.database), {
-		useNewUrlParser: true
-	});
+
+let dbToken =""
+if (process.env.database) {
+	dbToken = process.env.database;
 }
+else {
+	const secure = require('./secure.json');
+	dbToken = secure.database;
+}
+const mongoose = require("mongoose");
+mongoose.connect(dbToken, {
+	useNewUrlParser: true
+});
 
 const EXP = require("./models/exp.js");
 const LVL = require("./models/level.js")

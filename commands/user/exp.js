@@ -3,9 +3,17 @@ const path = require('path');
 
 const Discord = require('discord.js')
 const mongoose = require("mongoose")
-const secure = require('../../secure.json');
 
-mongoose.connect(secure.database, {
+let dbToken =""
+if (process.env.database) {
+	dbToken = process.env.database;
+}
+else {
+	const secure = require('../../secure.json');
+	dbToken = secure.database;
+}
+
+mongoose.connect(dbToken, {
 	useNewUrlParser: true
 });
 const EXP = require("../../models/exp.js");
