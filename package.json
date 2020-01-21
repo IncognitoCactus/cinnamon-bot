@@ -5,9 +5,12 @@
   "main": "cinnamon.js",
   "dependencies": {
     "canvas": "^2.5.0",
+    "commando-provider-mongo": "^1.2.1",
     "discord.js": "^11.5.1",
     "discord.js-commando": "^0.10.0",
     "moment-duration-format": "^2.3.2",
+    "mongodb": "^3.5.2",
+    "mongoose": "^5.8.9",
     "mysql2": "^1.6.5",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",

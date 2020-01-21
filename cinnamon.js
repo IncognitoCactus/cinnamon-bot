@@ -3,6 +3,7 @@ const sqlite = require('sqlite');
 const Commando = require('discord.js-commando');
 const path = require('path');
 const { formatNumber } = require('./utils/miscUtils.js');
+const secure = require('./secure.json');
 // eslint-disable-next-line no-global-assign
 console = new (require('./utils/advancedConsole'))(0, console.log);
 //Version number for playing status
@@ -16,17 +17,26 @@ const Cinnamon = new Commando.Client({
 });
 
 //Define looping statuses
-const statuses = [Cinnamon.commandPrefix + `help`, `We're gonna be good friends :)`, `:D`, `Try ` + Cinnamon.commandPrefix + `ship`, formatNumber(Cinnamon.guilds.size) + ` servers`, `Hi, I love you`]
+const statuses = [Cinnamon.commandPrefix + `help`, `We're gonna be good friends :)`, `:D`, `Try ` + Cinnamon.commandPrefix + `ship`, `Hi, you're cool`]
 
-//require('./database.js').start(Cinnamon.shard.id);
-Cinnamon.setProvider(
-	sqlite.open(path.join(__dirname, 'settings.sqlite3')).then(db => new Commando.SQLiteProvider(db))
-).catch(console.error);
+//screw sql, mongo is the future
+//TODO - REMOVE THE FUCKING PASSWORD
+if(secure.database) {
+	const mongoose = require("mongoose");
+	mongoose.connect(String(secure.database), {
+		useNewUrlParser: true
+	});
+}
+
+const EXP = require("./models/exp.js");
+const LVL = require("./models/level.js")
+
 
 Cinnamon.registry
 	.registerGroups([
 		['search', 'Search commands'],
 		['fun', 'Fun commands'],
+		['user', 'Profile and user commands'],
 		['utility', 'Utility commands'],
 		['roleplay', 'Roleplay commands'],
 		['owner', 'Owner-only commands']
@@ -67,10 +77,61 @@ Cinnamon.on("guildCreate", guild => {
 	channel.send("Hi! My name is Cinnamon and we're gonna be good friends!\nCheck out my commands with "+Cinnamon.commandPrefix+"help or feel free to dm me :)");
 });
 
+
+Cinnamon.on("message", async message => {
+	const chance = Math.floor(Math.random() * 70) + 1;
+	if (chance > 50) {
+	//here is where the exp are added.
+
+		const exptoadd = Math.ceil(Math.random() * 10);
+
+		EXP.findOne({
+			userID: message.author.id,
+			serverID: message.guild.id
+		}, (err, res) => {
+			if(err) console.log(err);
+
+			if(!res){
+				const newDoc = new EXP({
+					userID: message.author.id,
+					username: message.author.username,
+					serverID: message.guild.id,
+					exp: exptoadd
+				})
+				newDoc.save().catch(err => console.log(err));
+			} else{
+				//If XP >= 100, add one to level
+				if(res.exp >= 100) {
+					res.exp = 0;
+					LVL.findOne({
+						userID: message.author.id
+					}, (err, res) => {
+						//If level 0, create doc for user and set level = 1
+						if(!res){
+							const newDoc = new LVL({
+								userID: message.author.id,
+								username: message.author.username,
+								serverID: message.guild.id,
+								lvl: 1
+							})
+							newDoc.save().catch(err => console.log(err));
+						}
+						else {
+							res.lvl += 1;
+							res.save().catch(err => console.log(err))
+						}
+					})
+				}
+				res.exp = res.exp + exptoadd;
+				res.save().catch(err => console.log(err))
+			}
+		})
+	}
+});
+
 // Checks if there's a bot token from Heroku
 if (process.env.BOT_TOKEN) Cinnamon.login(process.env.BOT_TOKEN);
 // Otherwise, assumes local testing configuration and loads token from secure
 else {
-	const secure = require('./secure.json');
 	Cinnamon.login(secure.discordAPIKey);
 }
