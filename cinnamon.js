@@ -35,6 +35,7 @@ mongoose.connect(dbToken, {
 
 const EXP = require("./models/exp.js");
 const LVL = require("./models/level.js")
+const SRVLVL = require("./models/level.js")
 
 
 Cinnamon.registry
@@ -119,6 +120,27 @@ Cinnamon.on("message", async message => {
 							const newDoc = new LVL({
 								userID: message.author.id,
 								username: message.author.username,
+								lvl: 1
+							})
+							newDoc.save().catch(err => console.log(err));
+						}
+						else {
+							res.lvl += 1;
+							res.save().catch(err => console.log(err))
+						}
+					})
+
+					//Server Lvl
+					SRVLVL.findOne({
+						userID: message.author.id,
+						serverID: message.guild.id
+					}, (err, res) => {
+						//If level 0, create doc for user and set level = 1
+						if(!res){
+							const newDoc = new LVL({
+								userID: message.author.id,
+								username: message.author.username,
+								serverID: message.guild.id,
 								lvl: 1
 							})
 							newDoc.save().catch(err => console.log(err));

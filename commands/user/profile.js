@@ -19,6 +19,7 @@ mongoose.connect(dbToken, {
 
 const EXP = require("../../models/exp.js");
 const LVL = require("../../models/level.js");
+const SRVLVL = require("../../models/level.js");
 
 module.exports = class profileCommand extends Command {
 	constructor(client) {
@@ -59,10 +60,10 @@ module.exports = class profileCommand extends Command {
 				.setThumbnail(user.displayAvatarURL);
                 
 			if (!res) {
-				embed.addField('You have no exp in this server :(','Talk some more!!')
+				embed.addField('EXP Towards Next Level','You have no exp in this server :(')
 			}
 			else {
-				embed.addField('EXP to Next Level',res.exp + " exp.")
+				embed.addField('EXP Towards Next Level',res.exp + " xp")
 			}
             
 			//Level
@@ -72,16 +73,28 @@ module.exports = class profileCommand extends Command {
 				if (err) console.log(err);
                     
 				if (!res) {
-					embed.addField('Level 0', "Talk some more to level up!")
+					embed.addField('Global Level', "0 - Talk some more!",true)
 				}
 				else {
-					embed.addField('Global Level',res.lvl)
+					embed.addField('Global Level','Level ' + res.lvl,true)
 				}
+				//Level
+				SRVLVL.findOne({
+					userID: user.id,
+					serverID: msg.guild.id
+				}, (err, res) => {
+					if (err) console.log(err);
+						
+					if (!res) {
+						embed.addField('Server Level', "0 - Talk some more!",true)
+					}
+					else {
+						embed.addField('Server Level','Level ' + res.lvl,true)
+					}
 
-				msg.channel.send(embed)
+					msg.channel.send(embed)
+				})
 			})
-
-
 		})
     
         

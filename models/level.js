@@ -6,4 +6,12 @@ const lvlSchema = mongoose.Schema({
 	lvl: Number
 });
 
+const ServerLvlSchema = mongoose.Schema({
+	userID: String,
+	username: String,
+	serverID: String,
+	lvl: Number
+});
+
 module.exports = mongoose.model("LVL", lvlSchema)
+module.exports = mongoose.model("SRVLVL", ServerLvlSchema)
