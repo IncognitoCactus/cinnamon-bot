@@ -55,8 +55,7 @@ module.exports = class expCommand extends Command {
 			.setThumbnail(user.displayAvatarURL);
             
 		INFO.findOne({
-			userID: user.id,
-			serverID: msg.guild.id
+			userID: user.id
 		}, (err, res) => {
 			if (err) console.log(err);
             

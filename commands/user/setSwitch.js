@@ -55,8 +55,7 @@ module.exports = class expCommand extends Command {
 			}
 			else {
 				INFO.findOne({
-					userID: msg.author.id,
-					serverID: msg.guild.id
+					userID: msg.author.id
 				}, (err, res) => {
 					if (err) console.log(err);
                 
@@ -64,7 +63,6 @@ module.exports = class expCommand extends Command {
 						const newCode = new INFO({
 							userID: msg.author.id,
 							username: msg.author.username,
-							serverID: msg.guild.id,
 							friendCode: code
 						})
 						newCode.save().catch(err => console.log(err));
