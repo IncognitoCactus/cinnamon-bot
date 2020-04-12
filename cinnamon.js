@@ -36,6 +36,7 @@ mongoose.connect(dbToken, {
 const EXP = require("./models/exp.js");
 const LVL = require("./models/level.js")
 const SRVLVL = require("./models/level.js")
+const INFO = require("./models/userinfo.js")
 
 
 Cinnamon.registry

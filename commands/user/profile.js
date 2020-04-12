@@ -20,6 +20,7 @@ mongoose.connect(dbToken, {
 const EXP = require("../../models/exp.js");
 const LVL = require("../../models/level.js");
 const SRVLVL = require("../../models/level.js");
+const INFO = require("../../models/userinfo.js")
 
 module.exports = class profileCommand extends Command {
 	constructor(client) {
@@ -92,9 +93,27 @@ module.exports = class profileCommand extends Command {
 						embed.addField('Server Level','Level ' + res.lvl,true)
 					}
 
-					msg.channel.send(embed)
+					//Info
+					INFO.findOne({
+						userID: user.id
+					}, (err, res) => {
+						if (err) console.log(err);
+                    
+						if (!res) {
+							embed.addField('Info', "No info available :(")
+						}
+						else {
+							if(res.friendCode) {
+								embed.addField('Switch Friend Code',res.friendCode)
+							}
+						}
+						msg.channel.send(embed)
+					})
+
+					
 				})
 			})
+
 		})
     
         
