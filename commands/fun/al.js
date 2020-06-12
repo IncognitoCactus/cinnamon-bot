@@ -22,8 +22,8 @@ module.exports = class DogCommand extends Command {
 			name: 'al',
 			group: 'fun',
 			memberName: 'al',
-			description: 'Finally. What I've been waiting for.',
-			details: 'Finally. What I've been waiting for.',
+			description: 'Finally. What I\'ve been waiting for.',
+			details: 'Finally. What I\'ve been waiting for.',
 			guildOnly: false,
 			throttling: {
 				usages: 2,
